@@ -5,10 +5,15 @@ async fn greet(req: HttpRequest) -> impl Responder {
     format!("Hello {}!", &name)
 }
 
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok()
+}
+
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .route("/health_check", web::get().to(health_check))
             .route("/", web::get().to(greet))
             .route("/{name}", web::get().to(greet))
     })
